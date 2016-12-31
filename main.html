@@ -1,0 +1,302 @@
+<!doctype html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="msapplication-tap-highlight" content="no">
+<meta name="msapplication-TileColor" content="#4d4d4d">
+<title>Garden Control System</title>
+<!-- CSS  -->
+<link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css" />
+<link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.5/jquery.mobile.structure-1.4.5.min.css" />
+<link rel="shortcut icon" href="static/favicon.ico" />
+<link rel="icon" href="static/favicon.ico" />
+	<link rel="stylesheet" href="static/themes/garden.min.css" />
+	<link rel="stylesheet" href="static/themes/jquery.mobile.icons.min.css" />
+<!-- SCRIPTS -->
+<script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
+<script src="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
+<script src="static/garden_control.js"></script>
+
+</head>
+<!-- ------------------------------------------------------------ -->
+<style>
+h3, h4 {text-align: center;}
+span {font-weight: bold;}
+.containing-element .ui-slider {width: 100%;}
+</style>
+<!-- ------------------------------------------------------------ -->
+<!-- PAGE-------------------------------------------------------- -->
+<div data-role="page" data-theme="a">
+<!-- HEADER------------------------------------------------------ -->
+<div data-role="header" id="header" data-position="fixed">
+	<h3>Garden Control System</h3>
+</div>
+<!-- CONTENT----------------------------------------------------- -->
+<div data-role="content" data-theme="a">
+<!-- --TABS------------------------------------------------------ -->
+	<div data-role="tabs" id="tabs">
+<!-- ------NAVBAR------------------------------------------------ -->
+		<div data-role="navbar">
+			<ul>
+				<li><button class="ui-btn" data-icon="clock"><span id="time"></span></button></li>
+				<li><a href="#one" data-ajax="false" data-icon="power" onclick="displaySummary()">Run</a></li>
+				<li><a href="#two" data-ajax="false" data-icon="recycle">Timing</a></li>
+				<li><a href="#three" data-ajax="false" data-icon="calendar">Scheduling</a></li>
+				<li><button class="ui-btn" data-icon="calendar"><span id="date"></span></button></li>
+			</ul>
+		</div>
+<!-- ------------------------------------------------------------ -->
+
+<!-- ------PAGE ONE - CONTROL PANEL------------------------------ -->		
+		<div id="one">
+			<!-- ----STATUS PANEL-------------------------------- -->
+			<ul data-role="listview" data-inset="true" data-theme="a">
+				<li style="text-align:center" data-role="list-divider" data-theme="a">System Status</li>
+				<li style="text-align:center"><p><span id="status"></span></p></li>
+				<li style="text-align:center">
+					<p><span id="comment_1"></span></p>
+					<p><span id="comment_2"></span></p>
+				</li>
+			</ul>
+			<!-- ----CONTROL PANEL------------------------------- -->
+			<ul data-role="listview" data-inset="true" id="control_panel">
+				<li style="text-align:center" data-role="list-divider">Control Panel</li>
+				<li style="text-align:center">
+					<button class="ui-btn ui-mini ui-icon-clock ui-btn-icon-top" onclick="manual()" id="bAutomatic">Automatic On/Off</button>
+					<button class="ui-btn ui-mini ui-icon-power ui-btn-icon-top" onclick="run_me()" id="bManual">Manual Run</button>
+					<button class="ui-btn ui-mini ui-icon-delete ui-btn-icon-top"onclick="stop_me()" id="bStop">Stop</button>
+					<button class="ui-btn ui-mini ui-icon-lock ui-btn-icon-top" onclick="save_me()" id="bSave">Save Settings</button>
+					<button class="ui-btn ui-mini ui-icon-refresh ui-btn-icon-top" onclick="load_me()" id="bLoad">Load Settings</button>
+				</li>
+			</ul>
+			<!-- ----MANUAL TIME PANEL--------------------------- -->
+			<div data-role="collapsible" >
+				<h3>Manual Timming</h3>
+				<ul data-role="listview" data-inset="false" data-theme="a">
+					<li style="text-align:center"><p>Section 1 <span id="tSectionM_1"></span> - run time: <span id="tTimeM_1"></span> min</p></li>
+					<li style="text-align:center"><p>Section 2 <span id="tSectionM_2"></span> - run time: <span id="tTimeM_2"></span> min</p></li>
+					<li style="text-align:center"><p>Section 3 <span id="tSectionM_3"></span> - run time: <span id="tTimeM_3"></span> min</p></li>
+					<li style="text-align:center"><p>Section 4 <span id="tSectionM_4"></span> - run time: <span id="tTimeM_4"></span> min</p></li>
+					<li style="text-align:center"><p>Section 5 <span id="tSectionM_5"></span> - run time: <span id="tTimeM_5"></span> min</p></li>
+					<li style="text-align:center"><p>Section 6 <span id="tSectionM_6"></span> - run time: <span id="tTimeM_6"></span> min</p></li>
+				</ul>	
+			</div>
+			<!-- ----AUTOMATIC TIME PANEL------------------------ -->
+			<div data-role="collapsible" >
+				<h3>Automatic Timming</h3>
+				<ul data-role="listview" data-inset="false" data-theme="a">
+					<li style="text-align:center"><p>Section 1 <span id="tSectionA_1"></span> - run time: <span id="tTimeA_1"></span> min</p></li>
+					<li style="text-align:center"><p>Section 2 <span id="tSectionA_2"></span> - run time: <span id="tTimeA_2"></span> min</p></li>
+					<li style="text-align:center"><p>Section 3 <span id="tSectionA_3"></span> - run time: <span id="tTimeA_3"></span> min</p></li>
+					<li style="text-align:center"><p>Section 4 <span id="tSectionA_4"></span> - run time: <span id="tTimeA_4"></span> min</p></li>
+					<li style="text-align:center"><p>Section 5 <span id="tSectionA_5"></span> - run time: <span id="tTimeA_5"></span> min</p></li>
+					<li style="text-align:center"><p>Section 6 <span id="tSectionA_6"></span> - run time: <span id="tTimeA_6"></span> min</p></li>
+				</ul>
+			</div>	
+			<!-- ----SCHEDULE PANEL------------------------ -->
+			<div data-role="collapsible">
+				<h3>Scheduled Runs</h3>
+					<ul data-role="listview" data-inset="false" data-theme="a">
+					<li style="text-align:center"><p><span id="tSchedule_1"></span></p></li>
+					<li style="text-align:center"><p><span id="tSchedule_2"></span></p></li>
+					<li style="text-align:center"><p><span id="tSchedule_3"></span></p></li>
+					<li style="text-align:center"><p><span id="tSchedule_4"></span></p></li>
+					<li style="text-align:center"><p><span id="tSchedule_5"></span></p></li>
+					<li style="text-align:center"><p><span id="tSchedule_6"></span></p></li>
+				</ul>
+			</div>	
+			<!-- ------------------------------------------------ -->
+		</div>
+<!-- ------------------------------------------------------------ -->
+
+<!-- ------PAGE TWO - MANUAL TIMING------------------------------ -->
+		<div id="two">
+			<!-- ----CONTROL PANEL------------------------------- -->
+			<ul data-role="listview" data-inset="true" id="control_panel">
+				<li style="text-align:center">
+					<button class="ui-btn ui-mini ui-icon-lock ui-btn-icon-top" onclick="save_me()" id="bSaveM">Save</button>
+					<button class="ui-btn ui-mini ui-icon-refresh ui-btn-icon-top" onclick="load_me()" id="bLoadM">Load</button>
+				</li>
+			</ul>
+		<!-- ----GRID START-------------------------------------- -->
+		<div class="ui-grid-a">
+			<!-- ----COLUMN 1------------------------------------ -->
+			<div class="ui-block-a">
+				<ul data-role="listview" data-inset="true">
+					<li data-role="list-divider">Section 1</li>
+					<li><select class="flip" name="flip" id="flip_1" data-role="slider" data-mini="true" onchange="turn_off(1)">
+							<option value="off">Off</option>
+							<option value="on">On</option>
+						</select>
+						<input type="range" name="slider" id="slider_1" value="10" min="1" max="30" data-highlight="true" disabled="disabled">
+					</li>
+					<li data-role="list-divider">Section 3</li>
+					<li><select class="flip" name="flip" id="flip_3" data-role="slider" data-mini="true" onchange="turn_off(3)">
+							<option value="off">Off</option>
+							<option value="on">On</option>
+						</select>
+						<input type="range" name="slider" id="slider_3" value="10" min="1" max="30" data-highlight="true" disabled="disabled">
+					</li>
+					<li data-role="list-divider">Section 5</li>
+					<li><select class="flip" name="flip" id="flip_5" data-role="slider" data-mini="true" onchange="turn_off(5)">
+							<option value="off">Off</option>
+							<option value="on">On</option>
+						</select>
+						<input type="range" name="slider" id="slider_5" value="10" min="1" max="30" data-highlight="true" disabled="disabled">
+					</li>
+				</ul>
+	</div>
+			<!-- ----COLUMN 2------------------------------------ -->
+			<div class="ui-block-b">
+				<ul data-role="listview" data-inset="true">
+					<li data-role="list-divider">Section 2</li>
+					<li><select class="flip" name="flip" id="flip_2" data-role="slider" data-mini="true" onchange="turn_off(2)">
+							<option value="off">Off</option>
+							<option value="on">On</option>
+						</select>
+						<input type="range" name="slider" id="slider_2" value="10" min="1" max="30" data-highlight="true" disabled="disabled">
+					</li>
+					<li data-role="list-divider">Section 4</li>
+					<li><select class="flip" name="flip" id="flip_4" data-role="slider" data-mini="true" onchange="turn_off(4)">
+							<option value="off">Off</option>
+							<option value="on">On</option>
+						</select>
+						<input type="range" name="slider" id="slider_4" value="10" min="1" max="30" data-highlight="true" disabled="disabled">
+					</li>
+					<li data-role="list-divider">Section 6</li>
+					<li><select class="flip" name="flip" id="flip_6" data-role="slider" data-mini="true" onchange="turn_off(6)">
+							<option value="off">Off</option>
+							<option value="on">On</option>
+						</select>
+						<input type="range" name="slider" id="slider_6" value="10" min="1" max="30" data-highlight="true" disabled="disabled">
+					</li>
+				</ul>
+			</div>
+			<!-- ------------------------------------------------ -->
+		</div>
+		<!-- ---------------------------------------------------- -->
+		</div>
+<!-- ------------------------------------------------------------ -->
+
+<!-- ------PAGE THREE - AUTOMATIC TIMING------------------------- -->
+		<div id="three">
+			<!-- ----CONTROL PANEL------------------------------- -->
+			<ul data-role="listview" data-inset="true" id="control_panel">
+				<li style="text-align:center">
+					<button class="ui-btn ui-mini ui-icon-lock ui-btn-icon-top" onclick="save_me()" id="bSaveA">Save</button>
+					<button class="ui-btn ui-mini ui-icon-refresh ui-btn-icon-top" onclick="load_me()" id="bLoadA">Load</button>
+				</li>
+			</ul>
+			<!-- ----SCHEDULE------------------------------------ -->
+			<ul data-role="listview" data-inset="true">
+				<li data-role="list-divider" style="text-align:center">Daily Schedule</li>
+				<li style="text-align:center">
+					<form><fieldset data-role="controlgroup" data-type="horizontal">
+						<input type="checkbox" id="check_0"><label for="check_0">00</label>
+						<input type="checkbox" id="check_1"><label for="check_1">01</label>
+						<input type="checkbox" id="check_2"><label for="check_2">02</label>
+						<input type="checkbox" id="check_3"><label for="check_3">03</label>
+						<input type="checkbox" id="check_4"><label for="check_4">04</label>
+						<input type="checkbox" id="check_5"><label for="check_5">05</label>
+					</fieldset>
+					<fieldset data-role="controlgroup" data-type="horizontal">
+						<input type="checkbox" id="check_6"><label for="check_6">06</label>
+						<input type="checkbox" id="check_7"><label for="check_7">07</label>
+						<input type="checkbox" id="check_8"><label for="check_8">08</label>
+						<input type="checkbox" id="check_9"><label for="check_9">09</label>
+						<input type="checkbox" id="check_10"><label for="check_10">10</label>
+						<input type="checkbox" id="check_11"><label for="check_11">11</label>
+					</fieldset>
+					<fieldset data-role="controlgroup" data-type="horizontal">
+						<input type="checkbox" id="check_12"><label for="check_12">12</label>
+						<input type="checkbox" id="check_13"><label for="check_13">13</label>
+						<input type="checkbox" id="check_14"><label for="check_14">14</label>
+						<input type="checkbox" id="check_15"><label for="check_15">15</label>
+						<input type="checkbox" id="check_16"><label for="check_16">16</label>
+						<input type="checkbox" id="check_17"><label for="check_17">17</label>
+					</fieldset>
+					<fieldset data-role="controlgroup" data-type="horizontal">
+						<input type="checkbox" id="check_18"><label for="check_18">18</label>
+						<input type="checkbox" id="check_19"><label for="check_19">19</label>
+						<input type="checkbox" id="check_20"><label for="check_20">20</label>
+						<input type="checkbox" id="check_21"><label for="check_21">21</label>
+						<input type="checkbox" id="check_22"><label for="check_22">22</label>
+						<input type="checkbox" id="check_23"><label for="check_23">23</label>
+					</fieldset>
+					</form>
+				</li>
+			</ul>
+		<!-- ----GRID START-------------------------------------- -->
+		<div class="ui-grid-a">
+			<!-- ----COLUMN 1------------------------------------ -->
+			<div class="ui-block-a">
+				<ul data-role="listview" data-inset="true">
+					<li data-role="list-divider">Section 1</li>
+					<li><select class="flip" name="flip" id="flip_7" data-role="slider" data-mini="true" onchange="turn_off(7)">
+							<option value="off">Off</option>
+							<option value="on">On</option>
+						</select>
+						<input type="range" name="slider" id="slider_7" value="10" min="1" max="30" data-highlight="true" disabled="disabled">
+					</li>
+					<li data-role="list-divider">Section 3</li>
+					<li><select class="flip" name="flip" id="flip_9" data-role="slider" data-mini="true" onchange="turn_off(9)">
+							<option value="off">Off</option>
+							<option value="on">On</option>
+						</select>
+						<input type="range" name="slider" id="slider_9" value="10" min="1" max="30" data-highlight="true" disabled="disabled">
+					</li>
+					<li data-role="list-divider">Section 5</li>
+					<li><select class="flip" name="flip" id="flip_11" data-role="slider" data-mini="true" onchange="turn_off(11)">
+							<option value="off">Off</option>
+							<option value="on">On</option>
+						</select>
+						<input type="range" name="slider" id="slider_11" value="10" min="1" max="30" data-highlight="true" disabled="disabled">
+					</li>
+				</ul>
+			</div>
+			<!-- ----COLUMN 2------------------------------------ -->
+			<div class="ui-block-b">
+				<ul data-role="listview" data-inset="true">
+					<li data-role="list-divider">Section 2</li>
+					<li><select class="flip" name="flip" id="flip_8" data-role="slider" data-mini="true" onchange="turn_off(8)">
+							<option value="off">Off</option>
+							<option value="on">On</option>
+						</select>
+						<input type="range" name="slider" id="slider_8" value="10" min="1" max="30" data-highlight="true" disabled="disabled">
+					</li>
+					<li data-role="list-divider">Section 4</li>
+					<li><select class="flip" name="flip" id="flip_10" data-role="slider" data-mini="true" onchange="turn_off(10)">
+							<option value="off">Off</option>
+							<option value="on">On</option>
+						</select>
+						<input type="range" name="slider" id="slider_10" value="10" min="1" max="30" data-highlight="true" disabled="disabled">
+					</li>
+					<li data-role="list-divider">Section 6</li>
+					<li><select class="flip" name="flip" id="flip_12" data-role="slider" data-mini="true" onchange="turn_off(12)">
+							<option value="off">Off</option>
+							<option value="on">On</option>
+						</select>
+						<input type="range" name="slider" id="slider_12" value="10" min="1" max="30" data-highlight="true" disabled="disabled">
+					</li>
+				</ul>
+			</div>
+		</div>
+		<!-- ---------------------------------------------------- -->
+		</div>
+<!-- ------------------------------------------------------------ -->
+	</div>	
+</div>
+<!-- FOOTER------------------------------------------------------ -->
+<div data-role="footer" data-position="fixed" data-tap-toggle="false">
+	<div data-role="navbar">
+		<ul>
+			<li><button data-icon="grid" id="temperature"></button></li>
+			<li><button data-icon="star" id="humidity"></button></li>
+			<li><button data-icon="cloud" id="weather_general"></button></li>
+			<li><button data-icon="gear" id="rain"></button></li>
+		</ul>
+	</div>
+</div>
+<!-- ------------------------------------------------------------ -->
+</div>
+<!-- ------------------------------------------------------------ -->
